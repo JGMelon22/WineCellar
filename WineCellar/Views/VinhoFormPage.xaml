@@ -4,10 +4,46 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="WineCellar.Views.VinhoFormPage"
              Title="Novo Vinho">
-    <ContentPage.Content>
-        <Label
-            Text="Formulário de vinho (em breve)"
-            HorizontalOptions="Center"
-            VerticalOptions="Center" />
-    </ContentPage.Content>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <Label Text="Nome" FontAttributes="Bold" />
+            <Entry x:Name="NomeEntry" Placeholder="Ex: Château Margaux" />
+
+            <Label Text="Descrição" FontAttributes="Bold" />
+            <Editor x:Name="DescricaoEditor" Placeholder="Ex: Notas sobre o vinho" Height="80" />
+
+            <Label Text="País" FontAttributes="Bold" />
+            <Entry x:Name="PaisEntry" Placeholder="Ex: França" />
+
+            <Label Text="Região" FontAttributes="Bold" />
+            <Entry x:Name="RegiaoEntry" Placeholder="Ex: Bordeaux" />
+
+            <Label Text="Uvas" FontAttributes="Bold" />
+            <Entry x:Name="UvasEntry" Placeholder="Ex: Cabernet Sauvignon, Merlot" />
+
+            <Label Text="Ano (Safra)" FontAttributes="Bold" />
+            <Entry x:Name="AnoEntry" Placeholder="Ex: 2015" Keyboard="Numeric" />
+
+            <Label Text="Tipo" FontAttributes="Bold" />
+            <Picker x:Name="TipoPicker" Title="Selecione o tipo" />
+
+            <Label Text="Nota (0 a 10)" FontAttributes="Bold" />
+            <Entry x:Name="NotaEntry" Placeholder="Ex: 9.5" Keyboard="Numeric" />
+
+            <HorizontalStackLayout Spacing="8">
+                <Label Text="Recomenda decantar?" FontAttributes="Bold" VerticalOptions="Center" />
+                <Switch x:Name="DecantarSwitch" />
+            </HorizontalStackLayout>
+
+            <Button
+                x:Name="SalvarButton"
+                Text="Salvar"
+                Clicked="OnSalverClicked"
+                Margin="0,16,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>

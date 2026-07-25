@@ -23,6 +23,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<VinhoRepositorioMemoria>();
 
         builder.Services.AddTransient<Views.VinhoListPage>();
+        builder.Services.AddTransient<Views.VinhoFormPage>();
         
         return builder.Build();
     }

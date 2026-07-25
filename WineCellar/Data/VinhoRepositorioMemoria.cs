@@ -4,8 +4,8 @@ namespace WineCellar.Data;
 
 public class VinhoRepositorioMemoria
 {
-    private readonly List<Vinho> _vinhos = new()
-    {
+    private readonly List<Vinho> _vinhos =
+    [
         new Vinho
         {
             Id = 1,
@@ -19,6 +19,7 @@ public class VinhoRepositorioMemoria
             Nota = 9.5,
             RecomendaDecantar = true
         },
+
         new Vinho
         {
             Id = 2,
@@ -32,7 +33,26 @@ public class VinhoRepositorioMemoria
             Nota = 8.0,
             RecomendaDecantar = false
         }
-    };
+    ];
+
+    private int _proximoId = 3;
 
     public List<Vinho> ObterTodos() => _vinhos;
+    public Vinho? ObterVinhoPorId(int id) => _vinhos.FirstOrDefault(v => v.Id == id);
+
+    public void Adicionar(Vinho vinho)
+    {
+        vinho.Id = _proximoId;
+        _vinhos.Add(vinho);
+    }
+
+    public void Atualizar(Vinho vinho)
+    {
+        var existente = ObterVinhoPorId(vinho.Id);
+        if (existente is null)
+            return;
+
+        var indice = _vinhos.IndexOf(existente);
+        _vinhos[indice] = vinho;
+    }
 }
