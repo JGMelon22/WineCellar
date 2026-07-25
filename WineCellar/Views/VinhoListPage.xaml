@@ -16,29 +16,41 @@
         SelectionChanged="OnVinhoSelecionado">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="models:Vinho">
-                <Grid Padding="12" ColumnDefinitions="Auto,*">
-                    <Label
-                        Grid.Column="0"
-                        Text="🍷"
-                        FontSize="28"
-                        VerticalOptions="Center"
-                        Margin="0,0,12,0">
-                    </Label>
+                <SwipeView>
+                    <SwipeView.RightItems>
+                        <SwipeItems Mode="Reveal">
+                            <SwipeItem
+                                Text="Excluir"
+                                BackgroundColor="IndianRed"
+                                Invoked="OnExcluirSwipedEvoked"
+                                CommandParameter="{Binding Id}" />
+                        </SwipeItems>
+                    </SwipeView.RightItems>
 
-                    <VerticalStackLayout Grid.Column="1" Spacing="2">
-                        <Label Text="{Binding Nome}" FontAttributes="Bold" FontSize="16" />
-                        <Label Text="{Binding Regiao}" FontSize="13" TextColor="Gray" />
-                        <Label FontSize="13" TextColor="Gray">
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="{Binding Ano}" />
-                                    <Span Text=". Nota " />
-                                    <Span Text="{Binding Nota}" />
-                                </FormattedString>
-                            </Label.FormattedText>
+                    <Grid Padding="12" ColumnDefinitions="Auto,*">
+                        <Label
+                            Grid.Column="0"
+                            Text="🍷"
+                            FontSize="28"
+                            VerticalOptions="Center"
+                            Margin="0,0,12,0">
                         </Label>
-                    </VerticalStackLayout>
-                </Grid>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="{Binding Nome}" FontAttributes="Bold" FontSize="16" />
+                            <Label Text="{Binding Regiao}" FontSize="13" TextColor="Gray" />
+                            <Label FontSize="13" TextColor="Gray">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding Ano}" />
+                                        <Span Text=". Nota " />
+                                        <Span Text="{Binding Nota}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </VerticalStackLayout>
+                    </Grid>
+                </SwipeView>
             </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>

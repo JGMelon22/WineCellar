@@ -32,4 +32,27 @@ public partial class VinhoListPage : ContentPage
         VinhosCollectionView.SelectedItem = null; // Limpa seleção visual
         await Shell.Current.GoToAsync($"{nameof(VinhoFormPage)}?id={vinhoSelecionado}");
     }
+
+    private async void OnExcluirSwipedEvoked(object? sender, EventArgs e)
+    {
+        if (sender is not SwipeItem swipeItem || swipeItem.CommandParameter is not int vinhoId)
+            return;
+
+        var vinho = _repositorio.ObterVinhoPorId(vinhoId);
+        if (vinho is null)
+            return;
+
+        var confirmar = await DisplayAlertAsync(
+            "Excluir vinho",
+            $"Tem certeza que deseja excluir \"{vinho.Nome}\"?",
+            "Excluir",
+            "Cancelar"
+        );
+
+        if (!confirmar)
+            return;
+
+        _repositorio.Excluir(vinhoId);
+        VinhosCollectionView.ItemsSource = _repositorio.ObterTodos().ToList();
+    }
 }

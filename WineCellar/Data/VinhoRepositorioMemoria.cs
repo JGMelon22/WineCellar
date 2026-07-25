@@ -6,7 +6,7 @@ public class VinhoRepositorioMemoria
 {
     private readonly List<Vinho> _vinhos =
     [
-        new Vinho
+        new()
         {
             Id = 1,
             Nome = "Château Margaux",
@@ -20,7 +20,7 @@ public class VinhoRepositorioMemoria
             RecomendaDecantar = true
         },
 
-        new Vinho
+        new()
         {
             Id = 2,
             Nome = "Casa Valduga 130",
@@ -54,5 +54,14 @@ public class VinhoRepositorioMemoria
 
         var indice = _vinhos.IndexOf(existente);
         _vinhos[indice] = vinho;
+    }
+
+    public void Excluir(int id)
+    {
+        var existente = ObterVinhoPorId(id);
+        if (existente is null)
+            return;
+
+        _vinhos.Remove(existente);
     }
 }
