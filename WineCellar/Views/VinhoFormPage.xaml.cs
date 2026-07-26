@@ -10,16 +10,16 @@ public partial class VinhoFormPage : ContentPage
     private readonly VinhoRepositorioMemoria _repositorio;
     private Vinho? _vinhoEmEdicao;
 
-    public int VinhoId
-    {
-        set => CarregarVinho(value);
-    }
-
     public VinhoFormPage(VinhoRepositorioMemoria repositorio)
     {
         InitializeComponent();
         _repositorio = repositorio;
         TipoPicker.ItemsSource = Enum.GetValues<TipoVinho>();
+    }
+
+    public int VinhoId
+    {
+        set => CarregarVinho(value);
     }
 
     private void CarregarVinho(int id)
@@ -70,7 +70,7 @@ public partial class VinhoFormPage : ContentPage
             return;
         }
 
-        Vinho vinho = _vinhoEmEdicao ?? new();
+        var vinho = _vinhoEmEdicao ?? new Vinho();
         vinho.Nome = NomeEntry.Text;
         vinho.Descricao = DescricaoEditor.Text ?? string.Empty;
         vinho.Pais = PaisEntry.Text ?? string.Empty;
@@ -85,7 +85,7 @@ public partial class VinhoFormPage : ContentPage
             _repositorio.Adicionar(vinho);
         else
             _repositorio.Atualizar(vinho);
-        
+
         await Shell.Current.GoToAsync(".."); // Shorthand do Shell para voltar uma página 
     }
 }

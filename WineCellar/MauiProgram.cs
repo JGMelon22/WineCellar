@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using WineCellar.Data;
+using WineCellar.Views;
 
 namespace WineCellar;
 
@@ -22,9 +23,10 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<VinhoRepositorioMemoria>();
 
-        builder.Services.AddTransient<Views.VinhoListPage>();
-        builder.Services.AddTransient<Views.VinhoFormPage>();
-        
+        builder.Services.AddTransient<VinhoListPage>();
+        builder.Services.AddTransient<VinhoFormPage>();
+        builder.Services.AddTransient<VinhoDetailPage>();
+
         return builder.Build();
     }
 }

@@ -35,10 +35,17 @@ public class VinhoRepositorioMemoria
         }
     ];
 
-    private int _proximoId = 3;
+    private readonly int _proximoId = 3;
 
-    public List<Vinho> ObterTodos() => _vinhos;
-    public Vinho? ObterVinhoPorId(int id) => _vinhos.FirstOrDefault(v => v.Id == id);
+    public List<Vinho> ObterTodos()
+    {
+        return _vinhos;
+    }
+
+    public Vinho? ObterVinhoPorId(int id)
+    {
+        return _vinhos.FirstOrDefault(v => v.Id == id);
+    }
 
     public void Adicionar(Vinho vinho)
     {
