@@ -3,7 +3,7 @@ using WineCellar.Models;
 
 namespace WineCellar.Data;
 
-public class VinhoRepository
+public class VinhoRepository : IVinhoRepositorio
 {
     private readonly SQLiteAsyncConnection _conexao;
     private bool _inicializado;
@@ -24,7 +24,7 @@ public class VinhoRepository
         _inicializado = true;
     }
 
-    public async Task<IEnumerable<Vinho>> ObterTodos()
+    public async Task<List<Vinho>> ObterTodos()
     {
         await InicializarAsync();
         return await _conexao.Table<Vinho>().ToListAsync();
@@ -35,5 +35,23 @@ public class VinhoRepository
         await InicializarAsync();
         return await _conexao.Table<Vinho>()
             .FirstOrDefaultAsync(v => v.Id == id);
+    }
+
+    public async Task Adicionar(Vinho vinho)
+    {
+        await InicializarAsync();
+        await _conexao.InsertAsync(vinho);
+    }
+
+    public async Task Atualizar(Vinho vinho)
+    {
+        await InicializarAsync();
+        await _conexao.UpdateAsync(vinho);
+    }
+
+    public async Task Excluir(Vinho vinho)
+    {
+        await InicializarAsync();
+        await _conexao.DeleteAsync(vinho);
     }
 }
