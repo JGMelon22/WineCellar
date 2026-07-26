@@ -53,29 +53,7 @@ public partial class VinhoFormPage : ContentPage
 
     private async void OnSalverClicked(object? sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(NomeEntry.Text))
-        {
-            await DisplayAlertAsync("Campo obrigatório", "Informe o nome do vinho.", "OK");
-            return;
-        }
-
-        if (TipoPicker.SelectedItem is not TipoVinho tipoSelecionado)
-        {
-            await DisplayAlertAsync("Campo obrigatório", "Selecione o tipo do vinho.", "OK");
-            return;
-        }
-
-        if (!int.TryParse(AnoEntry.Text, out var ano))
-        {
-            await DisplayAlertAsync("Valor inválido", "Informe um ano válido.", "OK");
-            return;
-        }
-
-        if (!double.TryParse(NotaEntry.Text, out var nota) || nota < 0 || nota > 10)
-        {
-            await DisplayAlertAsync("Valor inválido", "A nota deve ser um número entre 0 e 10.", "OK");
-            return;
-        }
+        var (tipoSelecionado, ano, nota) = await ValidarDados();
 
         var vinho = _vinhoEmEdicao ?? new Vinho();
         vinho.Nome = NomeEntry.Text;
@@ -94,5 +72,36 @@ public partial class VinhoFormPage : ContentPage
             await _repositorio.Atualizar(vinho);
 
         await Shell.Current.GoToAsync(".."); // Shorthand do Shell para voltar uma página 
+    }
+
+    private async Task<(TipoVinho tipoSelecionado, int ano, double nota)> ValidarDados()
+    {
+        if (string.IsNullOrWhiteSpace(NomeEntry.Text))
+        {
+            await DisplayAlertAsync("Campo obrigatório", "Informe o nome do vinho.", "OK");
+            return (TipoVinho.Tinto, 0, 0);
+        }
+
+        if (TipoPicker.SelectedItem is not TipoVinho tipoSelecionado)
+        {
+            await DisplayAlertAsync("Campo obrigatório", "Selecione o tipo do vinho.", "OK");
+            return (TipoVinho.Tinto, 0, 0);
+        }
+
+        if (!int.TryParse(AnoEntry.Text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var ano)
+            || ano < 1900 || ano > DateTime.Now.Year)
+        {
+            await DisplayAlertAsync("Valor inválido", $"Informe um ano entre 1900 e {DateTime.Now.Year}.", "OK");
+            return (tipoSelecionado, ano, 0);
+        }
+
+        var notaTexto = (NotaEntry.Text).Replace(',', '.');
+        if (!double.TryParse(notaTexto, NumberStyles.Float, CultureInfo.InvariantCulture, out var nota)
+            || nota < 0 || nota > 10)
+        {
+            await DisplayAlertAsync("Valor inválido", "A nota deve ser um número entre 0 e 10.", "OK");
+        }
+
+        return (tipoSelecionado, ano, nota);
     }
 }
