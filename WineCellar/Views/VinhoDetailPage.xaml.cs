@@ -7,28 +7,30 @@ namespace WineCellar.Views;
 [QueryProperty(nameof(VinhoId), "id")]
 public partial class VinhoDetailPage : ContentPage
 {
-    private readonly VinhoRepositorioMemoria _repositorio;
-    private Vinho? _vinho;
+    private readonly IVinhoRepositorio _repositorio;
     private int _vinhoId;
+    private Vinho? _vinho;
 
-    public VinhoDetailPage(VinhoRepositorioMemoria repositorio)
+    public int VinhoId
+    {
+        set => _vinhoId = value;
+    }
+
+    public VinhoDetailPage(IVinhoRepositorio repositorio)
     {
         InitializeComponent();
         _repositorio = repositorio;
     }
 
-    public int VinhoId
+    protected override async void OnAppearing()
     {
-        set
-        {
-            _vinhoId = value;
-            CarregarVinho();
-        }
+        base.OnAppearing();
+        await CarregarVinho();
     }
 
-    private void CarregarVinho()
+    private async Task CarregarVinho()
     {
-        _vinho = _repositorio.ObterVinhoPorId(_vinhoId);
+        _vinho = await _repositorio.ObterPorId(_vinhoId);
         if (_vinho is null)
             return;
 
@@ -66,7 +68,7 @@ public partial class VinhoDetailPage : ContentPage
         if (!confirmar)
             return;
 
-        _repositorio.Excluir(_vinhoId);
+        await _repositorio.Excluir(_vinho);
         await Shell.Current.GoToAsync("..");
     }
 }

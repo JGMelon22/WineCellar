@@ -5,18 +5,18 @@ namespace WineCellar.Views;
 
 public partial class VinhoListPage : ContentPage
 {
-    private readonly VinhoRepositorioMemoria _repositorio;
+    private readonly IVinhoRepositorio _repositorio;
 
-    public VinhoListPage(VinhoRepositorioMemoria repositorio)
+    public VinhoListPage(IVinhoRepositorio repositorio)
     {
         InitializeComponent();
         _repositorio = repositorio;
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
-        VinhosCollectionView.ItemsSource = _repositorio.ObterTodos().ToList();
+        VinhosCollectionView.ItemsSource = await _repositorio.ObterTodos();
     }
 
     private async void OnAdicionarClicked(object? sender, EventArgs e)

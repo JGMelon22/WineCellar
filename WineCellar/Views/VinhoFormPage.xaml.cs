@@ -7,10 +7,11 @@ namespace WineCellar.Views;
 [QueryProperty(nameof(VinhoId), "id")]
 public partial class VinhoFormPage : ContentPage
 {
-    private readonly VinhoRepositorioMemoria _repositorio;
+    private readonly IVinhoRepositorio _repositorio;
+    private int _vinhoId;
     private Vinho? _vinhoEmEdicao;
 
-    public VinhoFormPage(VinhoRepositorioMemoria repositorio)
+    public VinhoFormPage(IVinhoRepositorio repositorio)
     {
         InitializeComponent();
         _repositorio = repositorio;
@@ -19,15 +20,21 @@ public partial class VinhoFormPage : ContentPage
 
     public int VinhoId
     {
-        set => CarregarVinho(value);
+        set => _vinhoId = value;
     }
 
-    private void CarregarVinho(int id)
+    protected override async void OnAppearing()
     {
-        if (id <= 0)
+        base.OnAppearing();
+        await CarregarVinho();
+    }
+
+    private async Task CarregarVinho()
+    {
+        if (_vinhoId <= 0)
             return; // Modo criação
 
-        _vinhoEmEdicao = _repositorio.ObterVinhoPorId(id);
+        _vinhoEmEdicao = await _repositorio.ObterPorId(_vinhoId);
         if (_vinhoEmEdicao is null)
             return;
 
@@ -82,9 +89,9 @@ public partial class VinhoFormPage : ContentPage
         vinho.RecomendaDecantar = DecantarSwitch.IsToggled;
 
         if (_vinhoEmEdicao is null)
-            _repositorio.Adicionar(vinho);
+            await _repositorio.Adicionar(vinho);
         else
-            _repositorio.Atualizar(vinho);
+            await _repositorio.Atualizar(vinho);
 
         await Shell.Current.GoToAsync(".."); // Shorthand do Shell para voltar uma página 
     }

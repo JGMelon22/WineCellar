@@ -21,8 +21,8 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
-        builder.Services.AddSingleton<VinhoRepositorioMemoria>();
-
+        builder.Services.AddSingleton<IVinhoRepositorio, VinhoRepositorio>();
+        
         builder.Services.AddTransient<VinhoListPage>();
         builder.Services.AddTransient<VinhoFormPage>();
         builder.Services.AddTransient<VinhoDetailPage>();
