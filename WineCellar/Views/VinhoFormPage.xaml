@@ -11,6 +11,22 @@
             <Label Text="Nome" FontAttributes="Bold" />
             <Entry x:Name="NomeEntry" Placeholder="Ex: Château Margaux" />
 
+            <Label Text="Foto" FontAttributes="Bold"/>
+            <Frame HeightRequest="180"
+                   Padding="0"
+                   CornerRadius="8"
+                   IsClippedToBounds="True"
+                   BorderColor="LightGray">
+                <Image
+                    x:Name="FotoPreview"
+                    Aspect="AspectFill"
+                    IsVisible="False"/>
+            </Frame>
+            <Button 
+                x:Name="SelecionarFotoButton"
+                Text="Selecionar Foto"
+                Clicked="OnSelecionarFotoClicked"/>
+            
             <Label Text="Descrição" FontAttributes="Bold" />
             <Editor x:Name="DescricaoEditor" Placeholder="Ex: Notas sobre o vinho" Height="80" />
 
@@ -40,7 +56,7 @@
             <Button
                 x:Name="SalvarButton"
                 Text="Salvar"
-                Clicked="OnSalverClicked"
+                Clicked="OnSalvarClicked"
                 Margin="0,16,0,0" />
 
         </VerticalStackLayout>

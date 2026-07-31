@@ -1,6 +1,7 @@
 using System.Globalization;
 using WineCellar.Data;
 using WineCellar.Models;
+using WineCellar.Services;
 
 namespace WineCellar.Views;
 
@@ -8,19 +9,23 @@ namespace WineCellar.Views;
 public partial class VinhoFormPage : ContentPage
 {
     private readonly IVinhoRepositorio _repositorio;
+    private readonly IFotoService _fotoService;
     private int _vinhoId;
     private Vinho? _vinhoEmEdicao;
-
-    public VinhoFormPage(IVinhoRepositorio repositorio)
-    {
-        InitializeComponent();
-        _repositorio = repositorio;
-        TipoPicker.ItemsSource = Enum.GetValues<TipoVinho>();
-    }
+    private string? _caminhoFotoOriginal;
+    private string? _caminhoFotoAtual;
 
     public int VinhoId
     {
         set => _vinhoId = value;
+    }
+
+    public VinhoFormPage(IVinhoRepositorio repositorio, IFotoService fotoService)
+    {
+        InitializeComponent();
+        _repositorio = repositorio;
+        _fotoService = fotoService;
+        TipoPicker.ItemsSource = Enum.GetValues<TipoVinho>();
     }
 
     protected override async void OnAppearing()
@@ -49,29 +54,10 @@ public partial class VinhoFormPage : ContentPage
         NotaEntry.Text = _vinhoEmEdicao.Nota.ToString(CultureInfo.InvariantCulture);
         DecantarSwitch.IsToggled = _vinhoEmEdicao.RecomendaDecantar;
         TipoPicker.SelectedItem = _vinhoEmEdicao.Tipo;
-    }
 
-    private async void OnSalverClicked(object? sender, EventArgs e)
-    {
-        var (tipoSelecionado, ano, nota) = await ValidarDados();
-
-        var vinho = _vinhoEmEdicao ?? new Vinho();
-        vinho.Nome = NomeEntry.Text;
-        vinho.Descricao = DescricaoEditor.Text ?? string.Empty;
-        vinho.Pais = PaisEntry.Text ?? string.Empty;
-        vinho.Regiao = RegiaoEntry.Text ?? string.Empty;
-        vinho.Uvas = UvasEntry.Text ?? string.Empty;
-        vinho.Ano = ano;
-        vinho.Tipo = tipoSelecionado;
-        vinho.Nota = nota;
-        vinho.RecomendaDecantar = DecantarSwitch.IsToggled;
-
-        if (_vinhoEmEdicao is null)
-            await _repositorio.Adicionar(vinho);
-        else
-            await _repositorio.Atualizar(vinho);
-
-        await Shell.Current.GoToAsync(".."); // Shorthand do Shell para voltar uma página 
+        _caminhoFotoOriginal = _vinhoEmEdicao.CaminhoFoto;
+        _caminhoFotoAtual = _caminhoFotoOriginal;
+        AtualizarPreviewFoto();
     }
 
     private async Task<(TipoVinho tipoSelecionado, int ano, double nota)> ValidarDados()
@@ -103,5 +89,71 @@ public partial class VinhoFormPage : ContentPage
         }
 
         return (tipoSelecionado, ano, nota);
+    }
+
+    private async void OnSelecionarFotoClicked(object? sender, EventArgs e)
+    {
+        var opcoes = _fotoService.CameraDisponivel()
+            ? new[] { "Câmera", "Galeria" }
+            : new[] { "Galeria" };
+
+        var escolha = await DisplayActionSheetAsync("Faoto da garrafa", "Cancelar", null, opcoes);
+
+        string? novoCaminho = escolha switch
+        {
+            "Câmera" => await _fotoService.CapturarFotoAsync(),
+            "Galeria" => await _fotoService.SelecionarDaGaleriaAsync(),
+            _ => null
+        };
+        if (novoCaminho is null)
+            return;
+
+        // Se já havia uma foto escolhida NESTA sessão (diferente da original salva),
+        // ela fica órfã agora — apaga pra não acumular lixo.
+        if (_caminhoFotoAtual is not null && _caminhoFotoAtual != _caminhoFotoOriginal)
+            _fotoService.ExcluirFoto(_caminhoFotoAtual);
+
+        _caminhoFotoAtual = novoCaminho;
+        AtualizarPreviewFoto();
+    }
+
+    private void AtualizarPreviewFoto()
+    {
+        if (string.IsNullOrWhiteSpace(_caminhoFotoAtual))
+        {
+            FotoPreview.IsVisible = false;
+            return;
+        }
+
+        FotoPreview.Source = ImageSource.FromFile(_caminhoFotoAtual);
+        FotoPreview.IsVisible = true;
+    }
+
+    private async void OnSalvarClicked(object? sender, EventArgs e)
+    {
+        var (tipoSelecionado, ano, nota) = await ValidarDados();
+
+        var vinho = _vinhoEmEdicao ?? new Vinho();
+        vinho.Nome = NomeEntry.Text;
+        vinho.Descricao = DescricaoEditor.Text ?? string.Empty;
+        vinho.Pais = PaisEntry.Text ?? string.Empty;
+        vinho.Regiao = RegiaoEntry.Text ?? string.Empty;
+        vinho.Uvas = UvasEntry.Text ?? string.Empty;
+        vinho.Ano = ano;
+        vinho.Tipo = tipoSelecionado;
+        vinho.Nota = nota;
+        vinho.RecomendaDecantar = DecantarSwitch.IsToggled;
+        vinho.CaminhoFoto = _caminhoFotoAtual;
+
+        if (_vinhoEmEdicao is null)
+            await _repositorio.Adicionar(vinho);
+        else
+            await _repositorio.Atualizar(vinho);
+
+        // Se a foto foi trocada (edição), a original agora está órfã — apaga do disco.
+        if (_caminhoFotoOriginal is not null && _caminhoFotoOriginal != _caminhoFotoAtual)
+            _fotoService.ExcluirFoto(_caminhoFotoOriginal);
+
+        await Shell.Current.GoToAsync(".."); // Shorthand do Shell para voltar uma página 
     }
 }
