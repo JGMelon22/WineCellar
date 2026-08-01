@@ -13,16 +13,24 @@
         <VerticalStackLayout Padding="16" Spacing="16">
 
             <Frame
-                HeightRequest="120"
+                HeightRequest="180"
                 BackgroundColor="LightGray"
                 CornerRadius="8"
                 Padding="0"
+                IsClippedToBounds="True"
                 HorizontalOptions="Fill">
-                <Label
-                    Text="Foto (em breve)"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    TextColor="Gray" />
+                <Grid>
+                    <Label
+                        x:Name="SemFotoLabel"
+                        Text="Sem foto"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        TextColor="Gray" />
+                    <Image
+                        x:Name="FotoImage"
+                        Aspect="AspectFill"
+                        IsVisible="False" />
+                </Grid>
             </Frame>
 
             <VerticalStackLayout Spacing="2">

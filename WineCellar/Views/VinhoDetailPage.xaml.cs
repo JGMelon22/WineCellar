@@ -1,6 +1,7 @@
 using System.Globalization;
 using WineCellar.Data;
 using WineCellar.Models;
+using WineCellar.Services;
 
 namespace WineCellar.Views;
 
@@ -8,6 +9,7 @@ namespace WineCellar.Views;
 public partial class VinhoDetailPage : ContentPage
 {
     private readonly IVinhoRepositorio _repositorio;
+    private readonly IFotoService _fotoService;
     private int _vinhoId;
     private Vinho? _vinho;
 
@@ -16,10 +18,11 @@ public partial class VinhoDetailPage : ContentPage
         set => _vinhoId = value;
     }
 
-    public VinhoDetailPage(IVinhoRepositorio repositorio)
+    public VinhoDetailPage(IVinhoRepositorio repositorio, IFotoService fotoService)
     {
         InitializeComponent();
         _repositorio = repositorio;
+        _fotoService = fotoService;
     }
 
     protected override async void OnAppearing()
@@ -47,6 +50,20 @@ public partial class VinhoDetailPage : ContentPage
         DecantarLabel.Text = _vinho.RecomendaDecantar
             ? "🍷 Recomenda-se decantar antes de servir."
             : "Não precisa decantar.";
+
+        AtualizarFoto();
+    }
+
+    private void AtualizarFoto()
+    {
+        var temFoto = !string.IsNullOrEmpty(_vinho?.CaminhoFoto)
+                      && File.Exists(_vinho.CaminhoFoto);
+
+        FotoImage.IsVisible = temFoto;
+        SemFotoLabel.IsVisible = !temFoto;
+
+        if (temFoto)
+            FotoImage.Source = ImageSource.FromFile(_vinho!.CaminhoFoto);
     }
 
     private async void OnEditarClicked(object? sender, EventArgs e)
@@ -69,6 +86,7 @@ public partial class VinhoDetailPage : ContentPage
             return;
 
         await _repositorio.Excluir(_vinho);
+        _fotoService.ExcluirFoto(_vinho.CaminhoFoto);
         await Shell.Current.GoToAsync("..");
     }
 }
