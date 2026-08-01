@@ -52,14 +52,13 @@
 
     <ItemGroup>
         <!-- App Icon -->
-        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4"/>
+        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#7C1428" ForegroundScale="0.65" IsRound="True"/>
 
         <!-- Splash Screen -->
-        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128"/>
+        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#7C1428" BaseSize="128,128"/>
 
         <!-- Images -->
         <MauiImage Include="Resources\Images\*"/>
-        <MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185"/>
 
         <!-- Custom Fonts -->
         <MauiFont Include="Resources\Fonts\*"/>
@@ -71,7 +70,11 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.90"/>
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.10"/>
-        <PackageReference Include="sqlite-net-pcl" Version="1.11.285" />
+        <PackageReference Include="sqlite-net-pcl" Version="1.11.285"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Resources\Images\"/>
     </ItemGroup>
 
 </Project>
