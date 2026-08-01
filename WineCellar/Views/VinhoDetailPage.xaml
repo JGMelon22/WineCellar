@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WineCellar.Views.VinhoDetailPage"
+             Title="Detalhes do Vinho">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Editar" Clicked="OnEditarClicked" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+
+            <Border
+                HeightRequest="180"
+                BackgroundColor="LightGray"
+                Padding="0"
+                HorizontalOptions="Fill">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8" />
+                </Border.StrokeShape>
+
+                <Grid>
+                    <Label
+                        x:Name="SemFotoLabel"
+                        Text="Sem foto"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        TextColor="Gray" />
+                    <Image
+                        x:Name="FotoImage"
+                        Aspect="AspectFill"
+                        IsVisible="False" />
+                </Grid>
+            </Border>
+
+            <VerticalStackLayout Spacing="2">
+                <Label x:Name="NomeLabel" FontAttributes="Bold" FontSize="24" />
+                <Label x:Name="TipoLabel" FontSize="16" TextColor="Gray" />
+            </VerticalStackLayout>
+
+            <BoxView HeightRequest="1" BackgroundColor="LightGray" />
+
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+                <VerticalStackLayout Grid.Row="0" Grid.Column="0">
+                    <Label Text="País" FontAttributes="Bold" FontSize="12" TextColor="Gray" />
+                    <Label x:Name="PaisLabel" FontSize="16" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="0" Grid.Column="1">
+                    <Label Text="Região" FontAttributes="Bold" FontSize="12" TextColor="Gray" />
+                    <Label x:Name="RegiaoLabel" FontSize="16" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="1" Grid.Column="0">
+                    <Label Text="Safra" FontAttributes="Bold" FontSize="12" TextColor="Gray" />
+                    <Label x:Name="AnoLabel" FontSize="16" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="1" Grid.Column="1">
+                    <Label Text="Nota" FontAttributes="Bold" FontSize="12" TextColor="Gray" />
+                    <Label x:Name="NotaLabel" FontSize="16" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                    <Label Text="Uvas" FontAttributes="Bold" FontSize="12" TextColor="Gray" />
+                    <Label x:Name="UvasLabel" FontSize="16" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <BoxView HeightRequest="1" BackgroundColor="LightGray" />
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Descrição" FontAttributes="Bold" FontSize="12" TextColor="Gray" />
+                <Label x:Name="DescricaoLabel" FontSize="16" />
+            </VerticalStackLayout>
+
+            <Label x:Name="DecantarLabel" FontSize="16" FontAttributes="Italic" />
+
+            <Button
+                x:Name="ExcluirButton"
+                Text="Excluir vinho"
+                BackgroundColor="IndianRed"
+                TextColor="White"
+                Clicked="OnExcluirClicked"
+                Margin="0,24,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace WineCellar;
+﻿namespace WineCellar;
 
 public partial class App : Application
 {
