@@ -12,13 +12,16 @@
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="16">
 
-            <Frame
+            <Border
                 HeightRequest="180"
                 BackgroundColor="LightGray"
-                CornerRadius="8"
                 Padding="0"
-                IsClippedToBounds="True"
                 HorizontalOptions="Fill">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8" />
+                </Border.StrokeShape>
+
                 <Grid>
                     <Label
                         x:Name="SemFotoLabel"
@@ -31,7 +34,7 @@
                         Aspect="AspectFill"
                         IsVisible="False" />
                 </Grid>
-            </Frame>
+            </Border>
 
             <VerticalStackLayout Spacing="2">
                 <Label x:Name="NomeLabel" FontAttributes="Bold" FontSize="24" />

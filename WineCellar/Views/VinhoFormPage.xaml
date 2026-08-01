@@ -11,22 +11,25 @@
             <Label Text="Nome" FontAttributes="Bold" />
             <Entry x:Name="NomeEntry" Placeholder="Ex: Château Margaux" />
 
-            <Label Text="Foto" FontAttributes="Bold"/>
-            <Frame HeightRequest="180"
-                   Padding="0"
-                   CornerRadius="8"
-                   IsClippedToBounds="True"
-                   BorderColor="LightGray">
+            <Label Text="Foto" FontAttributes="Bold" />
+            <Border HeightRequest="180"
+                    Padding="0"
+                    Stroke="LightGray">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8" />
+                </Border.StrokeShape>
+
                 <Image
                     x:Name="FotoPreview"
                     Aspect="AspectFill"
-                    IsVisible="False"/>
-            </Frame>
-            <Button 
+                    IsVisible="False" />
+            </Border>
+            <Button
                 x:Name="SelecionarFotoButton"
                 Text="Selecionar Foto"
-                Clicked="OnSelecionarFotoClicked"/>
-            
+                Clicked="OnSelecionarFotoClicked" />
+
             <Label Text="Descrição" FontAttributes="Bold" />
             <Editor x:Name="DescricaoEditor" Placeholder="Ex: Notas sobre o vinho" Height="80" />
 
