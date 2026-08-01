@@ -97,7 +97,7 @@ public partial class VinhoFormPage : ContentPage
             ? new[] { "Câmera", "Galeria" }
             : new[] { "Galeria" };
 
-        var escolha = await DisplayActionSheetAsync("Faoto da garrafa", "Cancelar", null, opcoes);
+        var escolha = await DisplayActionSheetAsync("Fato da garrafa", "Cancelar", null, opcoes);
 
         string? novoCaminho = escolha switch
         {
