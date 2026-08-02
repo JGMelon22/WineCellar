@@ -6,6 +6,7 @@
              Title="Detalhes do Vinho">
 
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Compartilhar" Clicked="OnCompartilharClicked"/>
         <ToolbarItem Text="Editar" Clicked="OnEditarClicked" />
     </ContentPage.ToolbarItems>
 

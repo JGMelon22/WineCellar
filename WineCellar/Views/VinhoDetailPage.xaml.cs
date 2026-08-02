@@ -89,4 +89,58 @@ public partial class VinhoDetailPage : ContentPage
         _fotoService.ExcluirFoto(_vinho.CaminhoFoto);
         await Shell.Current.GoToAsync("..");
     }
+
+    private async void OnCompartilharClicked(object? sender, EventArgs e)
+    {
+        if (_vinho is null)
+            return;
+
+        var texto = MontarTextoCompartilhamento(_vinho);
+
+        var temFoto = !string.IsNullOrWhiteSpace(_vinho.CaminhoFoto)
+                      && File.Exists(_vinho.CaminhoFoto);
+
+        if (temFoto)
+        {
+            // Por limitação do ShareMultipleFilesRequest, precisa por em disco o texto 
+            var caminhoTexto = Path.Combine(FileSystem.CacheDirectory, "vinho.txt");
+            await File.WriteAllTextAsync(caminhoTexto, texto);
+            
+            await Share.Default.RequestAsync(new ShareMultipleFilesRequest()
+            {
+                Title = "Compartilhar vinho",
+                Files = new List<ShareFile>
+                {
+                    new ShareFile(_vinho.CaminhoFoto!),
+                    new ShareFile(caminhoTexto)
+                }
+            });
+        }
+
+        else
+        {
+            await Share.RequestAsync(new ShareTextRequest
+            {
+                Title = "Compartilhar vinho",
+                Text = texto
+            });
+        }
+    }
+
+    private static string MontarTextoCompartilhamento(Vinho vinho)
+    {
+        List<string> linhas =
+        [
+            $"🍷 {vinho.Nome} ({vinho.Ano})",
+            $"Tipo: {vinho.Tipo}",
+            $"País: {vinho.Pais}",
+            $"Uvas: {vinho.Uvas}",
+            $"Nota: {vinho.Nota.ToString("0.#", CultureInfo.InstalledUICulture)}/10",
+            $"Recomenda decantar: {(vinho.RecomendaDecantar ? "Sim" : "Não")}",
+            "",
+            vinho.Descricao
+        ];
+
+        return string.Join(Environment.NewLine, linhas);
+    }
 }
