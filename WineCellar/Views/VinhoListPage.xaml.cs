@@ -1,35 +1,20 @@
-using WineCellar.Data;
-using WineCellar.Models;
+using WineCellar.ViewModels;
 
 namespace WineCellar.Views;
 
 public partial class VinhoListPage : ContentPage
 {
-    private readonly IVinhoRepositorio _repositorio;
+    private readonly VinhoListViewModel _viewModel;
 
-    public VinhoListPage(IVinhoRepositorio repositorio)
+    public VinhoListPage(VinhoListViewModel viewModel)
     {
         InitializeComponent();
-        _repositorio = repositorio;
+        BindingContext = _viewModel = viewModel;
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        VinhosCollectionView.ItemsSource = await _repositorio.ObterTodos();
-    }
-
-    private async void OnAdicionarClicked(object? sender, EventArgs e)
-    {
-        await Shell.Current.GoToAsync(nameof(VinhoFormPage));
-    }
-
-    private async void OnVinhoSelecionado(object? sender, SelectionChangedEventArgs e)
-    {
-        if (e.CurrentSelection.FirstOrDefault() is not Vinho vinhoSelecionado)
-            return;
-
-        VinhosCollectionView.SelectedItem = null; // Limpa seleção visual
-        await Shell.Current.GoToAsync($"{nameof(VinhoDetailPage)}?id={vinhoSelecionado.Id}");
+        await _viewModel.CarregarVinhosCommand.ExecuteAsync(null);
     }
 }
