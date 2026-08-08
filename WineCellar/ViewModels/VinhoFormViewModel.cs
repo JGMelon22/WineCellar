@@ -123,6 +123,13 @@ public partial class VinhoFormViewModel : ObservableValidator
     {
         ValidateAllProperties();
 
+        if (HasErrors)
+        {
+            var primeiroErro = GetErrors().First().ErrorMessage;
+            await Shell.Current.DisplayAlertAsync("Dados inválidos", primeiroErro, "OK");
+            return;
+        }
+
         var nota = double.Parse(NotaTexto.Replace(',', '.'), CultureInfo.InvariantCulture);
 
         var vinho = _vinhoEmEdicao ?? new Vinho();

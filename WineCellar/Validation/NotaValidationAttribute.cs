@@ -6,7 +6,7 @@ namespace WineCellar.Validation;
 public class NotaValidationAttribute : ValidationAttribute
 {
     public NotaValidationAttribute()
-        : base("Informe uma nota válida de 0a 10.")
+        : base("Informe uma nota válida de 0 a 10.")
     {
     }
 
