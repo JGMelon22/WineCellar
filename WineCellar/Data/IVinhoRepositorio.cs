@@ -9,5 +9,4 @@ public interface IVinhoRepositorio
     Task Adicionar(Vinho vinho);
     Task Atualizar(Vinho vinho);
     Task Excluir(Vinho vinho);
-
 }

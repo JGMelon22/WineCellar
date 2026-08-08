@@ -12,56 +12,57 @@ namespace WineCellar.ViewModels;
 [QueryProperty(nameof(VinhoId), "id")]
 public partial class VinhoFormViewModel : ObservableValidator
 {
-    private readonly IVinhoRepositorio _repositorio;
     private readonly IFotoService _fotoService;
-
-    private Vinho? _vinhoEmEdicao;
-    private string? _caminhoFotoOriginal;
-    private string? _caminhoFotoAtual;
-
-    [ObservableProperty] private int _vinhoId;
-
-    [ObservableProperty] private string _titulo = "Novo Vinho";
-
-    [ObservableProperty] [NotifyDataErrorInfo] [Required(ErrorMessage = "Informe o nome do vinho.")]
-    private string _nome = string.Empty;
-
-    [ObservableProperty] private string _descricao = string.Empty;
-
-    [ObservableProperty] private string _pais = string.Empty;
-
-    [ObservableProperty] private string _regiao = string.Empty;
-
-    [ObservableProperty] private string _uvas = string.Empty;
+    private readonly IVinhoRepositorio _repositorio;
 
     [ObservableProperty] [NotifyDataErrorInfo] [AnoValidation]
     private int _ano;
 
-    [ObservableProperty] [NotifyDataErrorInfo] [Required(ErrorMessage = "Selecione o tipo de vinho")]
-    private TipoVinho? _tipoSelecionado;
+    private string? _caminhoFotoAtual;
+    private string? _caminhoFotoOriginal;
+
+    [ObservableProperty] private string _descricao = string.Empty;
+
+    [ObservableProperty] private ImageSource? _fotoPreview;
+
+    [ObservableProperty] [NotifyDataErrorInfo] [Required(ErrorMessage = "Informe o nome do vinho.")]
+    private string _nome = string.Empty;
 
     [ObservableProperty] [NotifyDataErrorInfo] [NotaValidation]
     private string _notaTexto = string.Empty;
 
+    [ObservableProperty] private string _pais = string.Empty;
+
     [ObservableProperty] private bool _recomendaDecantar;
 
-    [ObservableProperty] private ImageSource? _fotoPreview;
+    [ObservableProperty] private string _regiao = string.Empty;
 
     [ObservableProperty] private bool _temFoto;
 
-    public bool SemFoto => TemFoto;
+    [ObservableProperty] [NotifyDataErrorInfo] [Required(ErrorMessage = "Selecione o tipo de vinho")]
+    private TipoVinho? _tipoSelecionado;
 
-    partial void OnTemFotoChanged(bool value)
-    {
-        OnPropertyChanged(nameof(SemFoto));
-    }
+    [ObservableProperty] private string _titulo = "Novo Vinho";
 
-    public IEnumerable<TipoVinho> TiposDisponiveis => Enum.GetValues<TipoVinho>();
+    [ObservableProperty] private string _uvas = string.Empty;
+
+    private Vinho? _vinhoEmEdicao;
+
+    [ObservableProperty] private int _vinhoId;
 
     public VinhoFormViewModel(IVinhoRepositorio repositorio, IFotoService fotoService)
     {
         _repositorio = repositorio;
         _fotoService = fotoService;
+    }
+
+    public bool SemFoto => TemFoto;
+
+    public IEnumerable<TipoVinho> TiposDisponiveis => Enum.GetValues<TipoVinho>();
+
+    partial void OnTemFotoChanged(bool value)
+    {
+        OnPropertyChanged(nameof(SemFoto));
     }
 
     [RelayCommand]
@@ -100,7 +101,7 @@ public partial class VinhoFormViewModel : ObservableValidator
 
         var escolha = await Shell.Current.DisplayActionSheetAsync("Fato da garrafa", "Cancelar", null, opcoes);
 
-        string? novoCaminho = escolha switch
+        var novoCaminho = escolha switch
         {
             "Câmera" => await _fotoService.CapturarFotoAsync(),
             "Galeria" => await _fotoService.SelecionarDaGaleriaAsync(),

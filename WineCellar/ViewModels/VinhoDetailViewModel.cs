@@ -11,34 +11,40 @@ namespace WineCellar.ViewModels;
 [QueryProperty(nameof(VinhoId), "id")]
 public partial class VinhoDetailViewModel : ObservableObject
 {
-    private readonly IVinhoRepositorio _repositorio;
     private readonly IFotoService _fotoService;
+    private readonly IVinhoRepositorio _repositorio;
 
-    private Vinho? _vinho;
+    [ObservableProperty] private string _ano = string.Empty;
 
-    [ObservableProperty] private int _vinhoId;
+    [ObservableProperty] private string _decantarTexto = string.Empty;
+
+    [ObservableProperty] private string _descricao = string.Empty;
+
+    [ObservableProperty] private ImageSource? _fotoOrigem;
 
     [ObservableProperty] private string _nome = string.Empty;
 
-    [ObservableProperty] private string _tipo = string.Empty;
+    [ObservableProperty] private string _nota = string.Empty;
 
     [ObservableProperty] private string _pais = string.Empty;
 
     [ObservableProperty] private string _regiao = string.Empty;
 
-    [ObservableProperty] private string _ano = string.Empty;
+    [ObservableProperty] private bool _temFoto;
 
-    [ObservableProperty] private string _nota = string.Empty;
+    [ObservableProperty] private string _tipo = string.Empty;
 
     [ObservableProperty] private string _uvas = string.Empty;
 
-    [ObservableProperty] private string _descricao = string.Empty;
+    private Vinho? _vinho;
 
-    [ObservableProperty] private string _decantarTexto = string.Empty;
+    [ObservableProperty] private int _vinhoId;
 
-    [ObservableProperty] private ImageSource? _fotoOrigem;
-
-    [ObservableProperty] private bool _temFoto;
+    public VinhoDetailViewModel(IVinhoRepositorio repositorio, IFotoService fotoService)
+    {
+        _repositorio = repositorio;
+        _fotoService = fotoService;
+    }
 
     public bool SemFoto => !TemFoto;
 
@@ -47,12 +53,6 @@ public partial class VinhoDetailViewModel : ObservableObject
     partial void OnTemFotoChanged(bool value)
     {
         OnPropertyChanged(nameof(SemFoto));
-    }
-
-    public VinhoDetailViewModel(IVinhoRepositorio repositorio, IFotoService fotoService)
-    {
-        _repositorio = repositorio;
-        _fotoService = fotoService;
     }
 
     [RelayCommand]

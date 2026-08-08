@@ -11,9 +11,9 @@ public partial class VinhoListViewModel : ObservableObject
 {
     private readonly IVinhoRepositorio _repositorio;
 
-    [ObservableProperty] private ObservableCollection<Vinho> _vinhos = new();
-
     [ObservableProperty] private bool _estaCarregando;
+
+    [ObservableProperty] private ObservableCollection<Vinho> _vinhos = new();
 
     public VinhoListViewModel(IVinhoRepositorio repositorio)
     {

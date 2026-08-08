@@ -5,7 +5,9 @@ public class FotoService : IFotoService
     private const string PastaFotos = "Fotos";
 
     public bool CameraDisponivel()
-        => MediaPicker.Default.IsCaptureSupported;
+    {
+        return MediaPicker.Default.IsCaptureSupported;
+    }
 
     public async Task<string?> CapturarFotoAsync()
     {

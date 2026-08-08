@@ -14,48 +14,6 @@ public class VinhoRepositorio : IVinhoRepositorio
         _conexao = new SQLiteAsyncConnection(caminhoDb);
     }
 
-    private async Task InicializarAsync()
-    {
-        if (_inicializado)
-            return;
-        
-        await _conexao.CreateTableAsync<Vinho>();
-        
-        var quantidade = await _conexao.Table<Vinho>().CountAsync();
-        if (quantidade == 0)
-        {
-            await _conexao.InsertAllAsync(new[]
-            {
-                new Vinho
-                {
-                    Nome = "Château Margaux",
-                    Descricao = "Um dos grandes vinhos de Bordeaux.",
-                    Pais = "França",
-                    Regiao = "Bordeaux",
-                    Uvas = "Cabernet Sauvignon, Merlot",
-                    Ano = 2015,
-                    Tipo = TipoVinho.Tinto,
-                    Nota = 9.5,
-                    RecomendaDecantar = true
-                },
-                new Vinho
-                {
-                    Nome = "Casa Valduga 130",
-                    Descricao = "Espumante brasileiro método tradicional.",
-                    Pais = "Brasil",
-                    Regiao = "Vale dos Vinhedos",
-                    Uvas = "Chardonnay, Pinot Noir",
-                    Ano = 2020,
-                    Tipo = TipoVinho.Espumante,
-                    Nota = 8.0,
-                    RecomendaDecantar = false
-                }
-            });
-        }
-        
-        _inicializado = true;
-    }
-
     public async Task<List<Vinho>> ObterTodos()
     {
         await InicializarAsync();
@@ -85,5 +43,45 @@ public class VinhoRepositorio : IVinhoRepositorio
     {
         await InicializarAsync();
         await _conexao.DeleteAsync(vinho);
+    }
+
+    private async Task InicializarAsync()
+    {
+        if (_inicializado)
+            return;
+
+        await _conexao.CreateTableAsync<Vinho>();
+
+        var quantidade = await _conexao.Table<Vinho>().CountAsync();
+        if (quantidade == 0)
+            await _conexao.InsertAllAsync(new[]
+            {
+                new Vinho
+                {
+                    Nome = "Château Margaux",
+                    Descricao = "Um dos grandes vinhos de Bordeaux.",
+                    Pais = "França",
+                    Regiao = "Bordeaux",
+                    Uvas = "Cabernet Sauvignon, Merlot",
+                    Ano = 2015,
+                    Tipo = TipoVinho.Tinto,
+                    Nota = 9.5,
+                    RecomendaDecantar = true
+                },
+                new Vinho
+                {
+                    Nome = "Casa Valduga 130",
+                    Descricao = "Espumante brasileiro método tradicional.",
+                    Pais = "Brasil",
+                    Regiao = "Vale dos Vinhedos",
+                    Uvas = "Chardonnay, Pinot Noir",
+                    Ano = 2020,
+                    Tipo = TipoVinho.Espumante,
+                    Nota = 8.0,
+                    RecomendaDecantar = false
+                }
+            });
+
+        _inicializado = true;
     }
 }
