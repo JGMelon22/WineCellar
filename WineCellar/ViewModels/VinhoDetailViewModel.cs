@@ -9,11 +9,8 @@ using WineCellar.Views;
 namespace WineCellar.ViewModels;
 
 [QueryProperty(nameof(VinhoId), "id")]
-public partial class VinhoDetailViewModel : ObservableObject
+public partial class VinhoDetailViewModel(IVinhoRepositorio repositorio, IFotoService fotoService) : ObservableObject
 {
-    private readonly IFotoService _fotoService;
-    private readonly IVinhoRepositorio _repositorio;
-
     [ObservableProperty] private string _ano = string.Empty;
 
     [ObservableProperty] private string _decantarTexto = string.Empty;
@@ -40,12 +37,6 @@ public partial class VinhoDetailViewModel : ObservableObject
 
     [ObservableProperty] private int _vinhoId;
 
-    public VinhoDetailViewModel(IVinhoRepositorio repositorio, IFotoService fotoService)
-    {
-        _repositorio = repositorio;
-        _fotoService = fotoService;
-    }
-
     public bool SemFoto => !TemFoto;
 
     // SemFoto não é [ObservableProperty] (é calculada), então precisa
@@ -58,7 +49,7 @@ public partial class VinhoDetailViewModel : ObservableObject
     [RelayCommand]
     private async Task CarregarAsync()
     {
-        _vinho = await _repositorio.ObterPorId(VinhoId);
+        _vinho = await repositorio.ObterPorId(VinhoId);
         if (_vinho is null)
             return;
 
@@ -101,8 +92,8 @@ public partial class VinhoDetailViewModel : ObservableObject
         if (!confirmar)
             return;
 
-        await _repositorio.Excluir(_vinho);
-        _fotoService.ExcluirFoto(_vinho.CaminhoFoto);
+        await repositorio.Excluir(_vinho);
+        fotoService.ExcluirFoto(_vinho.CaminhoFoto);
         await Shell.Current.GoToAsync("..");
     }
 

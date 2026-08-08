@@ -3,13 +3,8 @@ using System.Globalization;
 
 namespace WineCellar.Validation;
 
-public class NotaValidationAttribute : ValidationAttribute
+public class NotaValidationAttribute() : ValidationAttribute("Informe uma nota válida de 0 a 10.")
 {
-    public NotaValidationAttribute()
-        : base("Informe uma nota válida de 0 a 10.")
-    {
-    }
-
     public override bool IsValid(object? value)
     {
         if (value is not string texto || string.IsNullOrWhiteSpace(texto))

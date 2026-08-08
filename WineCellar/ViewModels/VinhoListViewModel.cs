@@ -7,18 +7,11 @@ using WineCellar.Views;
 
 namespace WineCellar.ViewModels;
 
-public partial class VinhoListViewModel : ObservableObject
+public partial class VinhoListViewModel(IVinhoRepositorio repositorio) : ObservableObject
 {
-    private readonly IVinhoRepositorio _repositorio;
-
     [ObservableProperty] private bool _estaCarregando;
 
     [ObservableProperty] private ObservableCollection<Vinho> _vinhos = new();
-
-    public VinhoListViewModel(IVinhoRepositorio repositorio)
-    {
-        _repositorio = repositorio;
-    }
 
     [RelayCommand]
     private async Task CarregarVinhosAsync()
@@ -28,7 +21,7 @@ public partial class VinhoListViewModel : ObservableObject
 
         EstaCarregando = true;
 
-        var lista = await _repositorio.ObterTodos();
+        var lista = await repositorio.ObterTodos();
         Vinhos = new ObservableCollection<Vinho>(lista);
 
         EstaCarregando = false;

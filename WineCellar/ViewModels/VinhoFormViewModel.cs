@@ -10,11 +10,8 @@ using WineCellar.Validation;
 namespace WineCellar.ViewModels;
 
 [QueryProperty(nameof(VinhoId), "id")]
-public partial class VinhoFormViewModel : ObservableValidator
+public partial class VinhoFormViewModel(IVinhoRepositorio repositorio, IFotoService fotoService) : ObservableValidator
 {
-    private readonly IFotoService _fotoService;
-    private readonly IVinhoRepositorio _repositorio;
-
     [ObservableProperty] [NotifyDataErrorInfo] [AnoValidation]
     private int _ano;
 
@@ -50,12 +47,6 @@ public partial class VinhoFormViewModel : ObservableValidator
 
     [ObservableProperty] private int _vinhoId;
 
-    public VinhoFormViewModel(IVinhoRepositorio repositorio, IFotoService fotoService)
-    {
-        _repositorio = repositorio;
-        _fotoService = fotoService;
-    }
-
     public bool SemFoto => TemFoto;
 
     public IEnumerable<TipoVinho> TiposDisponiveis => Enum.GetValues<TipoVinho>();
@@ -71,7 +62,7 @@ public partial class VinhoFormViewModel : ObservableValidator
         if (VinhoId <= 0)
             return; // Modo criação
 
-        _vinhoEmEdicao = await _repositorio.ObterPorId(VinhoId);
+        _vinhoEmEdicao = await repositorio.ObterPorId(VinhoId);
         if (_vinhoEmEdicao is null)
             return;
 
@@ -95,7 +86,7 @@ public partial class VinhoFormViewModel : ObservableValidator
     [RelayCommand]
     private async Task SelecionarFotoAsync()
     {
-        var opcoes = _fotoService.CameraDisponivel()
+        var opcoes = fotoService.CameraDisponivel()
             ? new[] { "Câmera", "Galeria" }
             : new[] { "Galeria" };
 
@@ -103,8 +94,8 @@ public partial class VinhoFormViewModel : ObservableValidator
 
         var novoCaminho = escolha switch
         {
-            "Câmera" => await _fotoService.CapturarFotoAsync(),
-            "Galeria" => await _fotoService.SelecionarDaGaleriaAsync(),
+            "Câmera" => await fotoService.CapturarFotoAsync(),
+            "Galeria" => await fotoService.SelecionarDaGaleriaAsync(),
             _ => null
         };
         if (novoCaminho is null)
@@ -113,7 +104,7 @@ public partial class VinhoFormViewModel : ObservableValidator
         // Se já havia uma foto escolhida NESTA sessão (diferente da original salva),
         // ela fica órfã agora — apaga pra não acumular lixo.
         if (_caminhoFotoAtual is not null && _caminhoFotoAtual != _caminhoFotoOriginal)
-            _fotoService.ExcluirFoto(_caminhoFotoAtual);
+            fotoService.ExcluirFoto(_caminhoFotoAtual);
 
         _caminhoFotoAtual = novoCaminho;
         AtualizarPreviewFoto();
@@ -146,12 +137,12 @@ public partial class VinhoFormViewModel : ObservableValidator
         vinho.CaminhoFoto = _caminhoFotoAtual;
 
         if (_vinhoEmEdicao is null)
-            await _repositorio.Adicionar(vinho);
+            await repositorio.Adicionar(vinho);
         else
-            await _repositorio.Atualizar(vinho);
+            await repositorio.Atualizar(vinho);
 
         if (_caminhoFotoOriginal is not null && _caminhoFotoOriginal != _caminhoFotoAtual)
-            _fotoService.ExcluirFoto(_caminhoFotoOriginal);
+            fotoService.ExcluirFoto(_caminhoFotoOriginal);
 
         await Shell.Current.GoToAsync("..");
     }

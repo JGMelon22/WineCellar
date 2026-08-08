@@ -2,12 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WineCellar.Validation;
 
-public class AnoValidationAttribute : ValidationAttribute
+public class AnoValidationAttribute() : ValidationAttribute("Informe um ano entre 1900 e o ano atual.")
 {
-    public AnoValidationAttribute() : base("Informe um ano entre 1900 e o ano atual.")
-    {
-    }
-
     public override bool IsValid(object? value)
     {
         if (value is not int ano)
