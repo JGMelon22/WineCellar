@@ -1,146 +1,20 @@
-using System.Globalization;
-using WineCellar.Data;
-using WineCellar.Models;
-using WineCellar.Services;
+using WineCellar.ViewModels;
 
 namespace WineCellar.Views;
 
-[QueryProperty(nameof(VinhoId), "id")]
 public partial class VinhoDetailPage : ContentPage
 {
-    private readonly IVinhoRepositorio _repositorio;
-    private readonly IFotoService _fotoService;
-    private int _vinhoId;
-    private Vinho? _vinho;
+    private readonly VinhoDetailViewModel _viewModel;
 
-    public int VinhoId
-    {
-        set => _vinhoId = value;
-    }
-
-    public VinhoDetailPage(IVinhoRepositorio repositorio, IFotoService fotoService)
+    public VinhoDetailPage(VinhoDetailViewModel viewModel)
     {
         InitializeComponent();
-        _repositorio = repositorio;
-        _fotoService = fotoService;
+        BindingContext = _viewModel = viewModel;
     }
 
-    protected override async void OnAppearing()
+    protected async override void OnAppearing()
     {
         base.OnAppearing();
-        await CarregarVinho();
-    }
-
-    private async Task CarregarVinho()
-    {
-        _vinho = await _repositorio.ObterPorId(_vinhoId);
-        if (_vinho is null)
-            return;
-
-        NomeLabel.Text = _vinho.Nome;
-        TipoLabel.Text = _vinho.Tipo.ToString();
-        PaisLabel.Text = _vinho.Pais;
-        RegiaoLabel.Text = _vinho.Regiao;
-        AnoLabel.Text = _vinho.Ano.ToString();
-        NotaLabel.Text = _vinho.Nota.ToString(CultureInfo.InvariantCulture);
-        UvasLabel.Text = _vinho.Uvas;
-        DescricaoLabel.Text = string.IsNullOrWhiteSpace(_vinho.Descricao)
-            ? "Sem descrição."
-            : _vinho.Descricao;
-        DecantarLabel.Text = _vinho.RecomendaDecantar
-            ? "🍷 Recomenda-se decantar antes de servir."
-            : "Não precisa decantar.";
-
-        AtualizarFoto();
-    }
-
-    private void AtualizarFoto()
-    {
-        var temFoto = !string.IsNullOrEmpty(_vinho?.CaminhoFoto)
-                      && File.Exists(_vinho.CaminhoFoto);
-
-        FotoImage.IsVisible = temFoto;
-        SemFotoLabel.IsVisible = !temFoto;
-
-        if (temFoto)
-            FotoImage.Source = ImageSource.FromFile(_vinho!.CaminhoFoto);
-    }
-
-    private async void OnEditarClicked(object? sender, EventArgs e)
-    {
-        await Shell.Current.GoToAsync($"{nameof(VinhoFormPage)}?id={_vinhoId}");
-    }
-
-    private async void OnExcluirClicked(object? sender, EventArgs e)
-    {
-        if (_vinho is null)
-            return;
-
-        var confirmar = await DisplayAlertAsync(
-            "Excluir vinho",
-            $"Tem certeza que deseja excluir \"{_vinho.Nome}\"?",
-            "Excluir",
-            "Cancelar");
-
-        if (!confirmar)
-            return;
-
-        await _repositorio.Excluir(_vinho);
-        _fotoService.ExcluirFoto(_vinho.CaminhoFoto);
-        await Shell.Current.GoToAsync("..");
-    }
-
-    private async void OnCompartilharClicked(object? sender, EventArgs e)
-    {
-        if (_vinho is null)
-            return;
-
-        var texto = MontarTextoCompartilhamento(_vinho);
-
-        var temFoto = !string.IsNullOrWhiteSpace(_vinho.CaminhoFoto)
-                      && File.Exists(_vinho.CaminhoFoto);
-
-        if (temFoto)
-        {
-            // Por limitação do ShareMultipleFilesRequest, precisa por em disco o texto 
-            var caminhoTexto = Path.Combine(FileSystem.CacheDirectory, "vinho.txt");
-            await File.WriteAllTextAsync(caminhoTexto, texto);
-            
-            await Share.Default.RequestAsync(new ShareMultipleFilesRequest()
-            {
-                Title = "Compartilhar vinho",
-                Files = new List<ShareFile>
-                {
-                    new ShareFile(_vinho.CaminhoFoto!),
-                    new ShareFile(caminhoTexto)
-                }
-            });
-        }
-
-        else
-        {
-            await Share.RequestAsync(new ShareTextRequest
-            {
-                Title = "Compartilhar vinho",
-                Text = texto
-            });
-        }
-    }
-
-    private static string MontarTextoCompartilhamento(Vinho vinho)
-    {
-        List<string> linhas =
-        [
-            $"🍷 {vinho.Nome} ({vinho.Ano})",
-            $"Tipo: {vinho.Tipo}",
-            $"País: {vinho.Pais}",
-            $"Uvas: {vinho.Uvas}",
-            $"Nota: {vinho.Nota.ToString("0.#", CultureInfo.InstalledUICulture)}/10",
-            $"Recomenda decantar: {(vinho.RecomendaDecantar ? "Sim" : "Não")}",
-            "",
-            vinho.Descricao
-        ];
-
-        return string.Join(Environment.NewLine, linhas);
+        await _viewModel.CarregarCommand.ExecuteAsync(null);
     }
 }
