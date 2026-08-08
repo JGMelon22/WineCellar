@@ -35,7 +35,7 @@ public partial class VinhoListViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task AbrirDetalhes(Vinho vinho)
+    private async Task AbrirDetalhesAsync(Vinho vinho)
     {
         if (vinho is null)
             return;
@@ -44,7 +44,7 @@ public partial class VinhoListViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task NovoVinho()
+    private async Task NovoVinhoAsync()
     {
         await Shell.Current.GoToAsync(nameof(VinhoFormPage));
     }
