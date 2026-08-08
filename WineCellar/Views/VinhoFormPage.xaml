@@ -2,14 +2,16 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:WineCellar.ViewModels"
              x:Class="WineCellar.Views.VinhoFormPage"
-             Title="Novo Vinho">
+             x:DataType="viewmodels:VinhoFormViewModel"
+             Title="{Binding Titulo}">
 
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="12">
 
             <Label Text="Nome" FontAttributes="Bold" />
-            <Entry x:Name="NomeEntry" Placeholder="Ex: Château Margaux" />
+            <Entry Text="{Binding Nome}" Placeholder="Ex: Château Margaux" />
 
             <Label Text="Foto" FontAttributes="Bold" />
             <Border HeightRequest="180"
@@ -21,45 +23,46 @@
                 </Border.StrokeShape>
 
                 <Image
-                    x:Name="FotoPreview"
+                    Source="{Binding FotoPreview}"
                     Aspect="AspectFill"
-                    IsVisible="False" />
+                    IsVisible="{Binding TemFoto}" />
             </Border>
             <Button
-                x:Name="SelecionarFotoButton"
                 Text="Selecionar Foto"
-                Clicked="OnSelecionarFotoClicked" />
+                Command="{Binding SelecionarFotoCommand}" />
 
             <Label Text="Descrição" FontAttributes="Bold" />
-            <Editor x:Name="DescricaoEditor" Placeholder="Ex: Notas sobre o vinho" Height="80" />
+            <Editor Text="{Binding Descricao}" Placeholder="Ex: Notas sobre o vinho" Height="80" />
 
             <Label Text="País" FontAttributes="Bold" />
-            <Entry x:Name="PaisEntry" Placeholder="Ex: França" />
+            <Entry Text="{Binding Pais}" Placeholder="Ex: França" />
 
             <Label Text="Região" FontAttributes="Bold" />
-            <Entry x:Name="RegiaoEntry" Placeholder="Ex: Bordeaux" />
+            <Entry Text="{Binding Regiao}" Placeholder="Ex: Bordeaux" />
 
             <Label Text="Uvas" FontAttributes="Bold" />
-            <Entry x:Name="UvasEntry" Placeholder="Ex: Cabernet Sauvignon, Merlot" />
+            <Entry Text="{Binding Uvas}" Placeholder="Ex: Cabernet Sauvignon, Merlot" />
 
             <Label Text="Ano (Safra)" FontAttributes="Bold" />
-            <Entry x:Name="AnoEntry" Placeholder="Ex: 2015" Keyboard="Numeric" />
+            <Entry Text="{Binding Ano}" Placeholder="Ex: 2015" Keyboard="Numeric" />
 
             <Label Text="Tipo" FontAttributes="Bold" />
-            <Picker x:Name="TipoPicker" Title="Selecione o tipo" />
+            <Picker Title="Selecione o tipo"
+                    ItemsSource="{Binding TiposDisponiveis}"
+                    SelectedItem="{Binding TipoSelecionado}" />
 
             <Label Text="Nota (0 a 10)" FontAttributes="Bold" />
-            <Entry x:Name="NotaEntry" Placeholder="Ex: 9.5" Keyboard="Numeric" />
+            <Entry Text="{Binding NotaTexto}" Placeholder="Ex: 9.5" Keyboard="Numeric" />
 
             <HorizontalStackLayout Spacing="8">
                 <Label Text="Recomenda decantar?" FontAttributes="Bold" VerticalOptions="Center" />
-                <Switch x:Name="DecantarSwitch" />
+                <Switch IsToggled="{Binding RecomendaDecantar}" />
             </HorizontalStackLayout>
 
             <Button
                 x:Name="SalvarButton"
                 Text="Salvar"
-                Clicked="OnSalvarClicked"
+                Command="{Binding SalvarCommand}"
                 Margin="0,16,0,0" />
 
         </VerticalStackLayout>

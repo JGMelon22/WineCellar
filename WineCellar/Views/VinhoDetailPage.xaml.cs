@@ -12,7 +12,7 @@ public partial class VinhoDetailPage : ContentPage
         BindingContext = _viewModel = viewModel;
     }
 
-    protected async override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
         await _viewModel.CarregarCommand.ExecuteAsync(null);

@@ -30,6 +30,7 @@ public static class MauiProgram
         builder.Services.AddTransient<VinhoListViewModel>();
 
         builder.Services.AddTransient<VinhoFormPage>();
+        builder.Services.AddTransient<VinhoFormViewModel>();
 
         builder.Services.AddTransient<VinhoDetailPage>();
         builder.Services.AddTransient<VinhoDetailViewModel>();
