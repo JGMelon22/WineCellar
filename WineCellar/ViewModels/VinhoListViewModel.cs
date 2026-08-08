@@ -29,7 +29,7 @@ public partial class VinhoListViewModel : ObservableObject
         EstaCarregando = true;
 
         var lista = await _repositorio.ObterTodos();
-        Vinhos = new ObservableCollection<Vinho>();
+        Vinhos = new ObservableCollection<Vinho>(lista);
 
         EstaCarregando = false;
     }
