@@ -45,6 +45,37 @@ public class VinhoRepositorio : IVinhoRepositorio
         await _conexao.DeleteAsync(vinho);
     }
 
+    public async Task<List<Vinho>> Buscar(string? nome, TipoVinho? tipoVinho, string? pais)
+    {
+        await InicializarAsync();
+
+        var query = _conexao.Table<Vinho>();
+
+        if (!string.IsNullOrWhiteSpace(nome))
+            query = query.Where(v => v.Nome.Contains(nome));
+
+        if (tipoVinho.HasValue)
+            query = query.Where(v => v.Tipo == tipoVinho.Value);
+
+        if (!string.IsNullOrWhiteSpace(pais))
+            query = query.Where(v => v.Pais == pais);
+
+        return await query.ToListAsync();
+    }
+
+    public async Task<List<string>> ObterPaisesDistintos()
+    {
+        await InicializarAsync();
+
+        var vinhos = await _conexao.Table<Vinho>().ToListAsync();
+
+        return vinhos
+            .Select(v => v.Pais)
+            .Distinct()
+            .OrderBy(p => p)
+            .ToList();
+    }
+
     private async Task InicializarAsync()
     {
         if (_inicializado)

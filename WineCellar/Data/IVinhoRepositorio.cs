@@ -9,4 +9,6 @@ public interface IVinhoRepositorio
     Task Adicionar(Vinho vinho);
     Task Atualizar(Vinho vinho);
     Task Excluir(Vinho vinho);
+    Task<List<Vinho>> Buscar(string? nome, TipoVinho? tipoVinho, string? pais);
+    Task<List<string>> ObterPaisesDistintos();
 }
