@@ -9,9 +9,26 @@ namespace WineCellar.ViewModels;
 
 public partial class VinhoListViewModel(IVinhoRepositorio repositorio) : ObservableObject
 {
+    private const string OpcaoTodos = "Todos";
+    private const int DebounceMs = 400;
+
+    private CancellationTokenSource? _debounceCts;
+
     [ObservableProperty] private bool _estaCarregando;
 
     [ObservableProperty] private ObservableCollection<Vinho> _vinhos = new();
+
+    [ObservableProperty] private string _filtroNome = string.Empty;
+
+    [ObservableProperty] private ObservableCollection<string> _tiposDisponiveis = new(
+        new[] { OpcaoTodos }.Concat(Enum.GetNames(typeof(TipoVinho)))
+    );
+
+    [ObservableProperty] private string _tipoSelecionado = OpcaoTodos;
+
+    [ObservableProperty] private ObservableCollection<string> _paisesDisponiveis = new();
+
+    [ObservableProperty] private string _paisSelecionado = OpcaoTodos;
 
     [RelayCommand]
     private async Task CarregarVinhosAsync()
@@ -21,14 +38,69 @@ public partial class VinhoListViewModel(IVinhoRepositorio repositorio) : Observa
 
         EstaCarregando = true;
 
-        var lista = await repositorio.ObterTodos();
+        var paises = await repositorio.ObterPaisesDistintos();
+        PaisesDisponiveis = new ObservableCollection<string>(
+            new[] { OpcaoTodos }.Concat(paises));
+
+        EstaCarregando = false;
+
+        await BuscarAsync();
+    }
+
+    [RelayCommand]
+    private async Task BuscarAsync()
+    {
+        EstaCarregando = true;
+
+        TipoVinho? tipoVinho = TipoSelecionado == OpcaoTodos
+            ? null
+            : Enum.Parse<TipoVinho>(TipoSelecionado);
+
+        string? pais = PaisSelecionado == OpcaoTodos
+            ? null
+            : PaisSelecionado;
+
+        var lista = await repositorio.Buscar(FiltroNome, tipoVinho, pais);
         Vinhos = new ObservableCollection<Vinho>(lista);
 
         EstaCarregando = false;
     }
 
+    // // Disparado automaticamente pelo CommunityToolkit.Mvvm sempre que FiltroNome muda
+    partial void OnFiltroNomeChanged(string value) => AgendarBuscaComDebounce();
+
+    // Picker não precisa de debounce: cada seleção já é uma escolha
+    // deliberada do usuário, não uma tecla no meio de uma palavra.
+
+    partial void OnTipoSelecionadoChanged(string value) => BuscarCommand.Execute(null);
+
+    partial void OnPaisSelecionadoChanged(string value) => BuscarCommand.Execute(null);
+
+    private void AgendarBuscaComDebounce()
+    {
+        _debounceCts?.Cancel();
+        _debounceCts = new CancellationTokenSource();
+        var token = _debounceCts.Token;
+
+        _ = DispararBuscaAposDelayAsync(token);
+    }
+
+    private async Task DispararBuscaAposDelayAsync(CancellationToken token)
+    {
+        try
+        {
+            await Task.Delay(DebounceMs, token);
+            if (!token.IsCancellationRequested)
+                await BuscarAsync();
+        }
+        catch (TaskCanceledException)
+        {
+            // Esperado: uma tecla nova cancelou a espera anterior
+        }
+    }
+
     [RelayCommand]
-    private async Task AbrirDetalhesAsync(Vinho vinho)
+    private async Task AbrirDetalhesAsync(Vinho? vinho)
     {
         if (vinho is null)
             return;
