@@ -2,6 +2,7 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:models="clr-namespace:WineCellar.Models"
              xmlns:viewmodels="clr-namespace:WineCellar.ViewModels"
              x:Class="WineCellar.Views.VinhoListPage"
@@ -12,42 +13,81 @@
         <ToolbarItem Text="+" Command="{Binding NovoVinhoCommand}" />
     </ContentPage.ToolbarItems>
 
-    <CollectionView
-        ItemsSource="{Binding Vinhos}"
-        SelectionMode="None">
-        <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="models:Vinho">
-                <Grid Padding="12" ColumnDefinitions="Auto,*">
-                    <Grid.GestureRecognizers>
-                        <TapGestureRecognizer
-                            Command="{Binding Source={RelativeSource AncestorType={x:Type
-                            viewmodels:VinhoListViewModel}}, Path=AbrirDetalhesCommand}"
-                            CommandParameter="{Binding .}" />
-                    </Grid.GestureRecognizers>
+    <Grid RowDefinitions="Auto, *">
 
+        <VerticalStackLayout Grid.Row="0" Padding="12,8" Spacing="4">
+
+            <SearchBar
+                Placeholder="Buscar por nome..."
+                Text="{Binding FiltroNome}" />
+
+            <toolkit:Expander>
+                <toolkit:Expander.Header>
                     <Label
-                        Grid.Column="0"
-                        Text="🍷"
-                        FontSize="28"
-                        VerticalOptions="Center"
-                        Margin="0,0,12,0" />
+                        Text="Filtros"
+                        FontAttributes="Bold"
+                        Padding="4"
+                        TextColor="Gray" />
+                </toolkit:Expander.Header>
 
-                    <VerticalStackLayout Grid.Column="1" Spacing="2">
-                        <Label Text="{Binding Nome}" FontAttributes="Bold" FontSize="16" />
-                        <Label Text="{Binding Regiao}" FontSize="13" TextColor="Gray" />
-                        <Label FontSize="13" TextColor="Gray">
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="{Binding Ano}" />
-                                    <Span Text=". Nota " />
-                                    <Span Text="{Binding Nota}" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Padding="4,8">
+                    <VerticalStackLayout Grid.Column="0">
+                        <Label Text="Tipo" FontSize="12" TextColor="Gray" />
+                        <Picker
+                            ItemsSource="{Binding TiposDisponiveis}"
+                            SelectedItem="{Binding TipoSelecionado}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="País" FontSize="12" TextColor="Gray" />
+                        <Picker
+                            ItemsSource="{Binding PaisesDisponiveis}"
+                            SelectedItem="{Binding PaisSelecionado}" />
                     </VerticalStackLayout>
                 </Grid>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+            </toolkit:Expander>
+
+        </VerticalStackLayout>
+
+        <CollectionView
+            Grid.Row="1"
+            ItemsSource="{Binding Vinhos}"
+            SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Vinho">
+                    <Grid Padding="12" ColumnDefinitions="Auto,*">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type
+                            viewmodels:VinhoListViewModel}}, Path=AbrirDetalhesCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Grid.GestureRecognizers>
+
+                        <Label
+                            Grid.Column="0"
+                            Text="🍷"
+                            FontSize="28"
+                            VerticalOptions="Center"
+                            Margin="0,0,12,0" />
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="{Binding Nome}" FontAttributes="Bold" FontSize="16" />
+                            <Label Text="{Binding Regiao}" FontSize="13" TextColor="Gray" />
+                            <Label FontSize="13" TextColor="Gray">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding Ano}" />
+                                        <Span Text=". Nota " />
+                                        <Span Text="{Binding Nota}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </VerticalStackLayout>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
 
 </ContentPage>

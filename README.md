@@ -6,7 +6,7 @@ App Android desenvolvido em .NET MAUI, com foco em aprendizado didático de arqu
 
 <p align="center">
   <img src="assets/splash.jpeg" width="220" alt="Splash Screen" />
-  <img src="assets/list.jpeg" width="220" alt="Wine List" />
+  <img src="assets/filters.jpeg" width="220" alt="Wine List With Filters" />
 </p>
 
 <p align="center">
