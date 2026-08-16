@@ -127,6 +127,102 @@ public class VinhoRepositorio : IVinhoRepositorio
                     Tipo = TipoVinho.Espumante,
                     Nota = 8.0,
                     RecomendaDecantar = false
+                },
+                new Vinho
+                {
+                    Nome = "Catena Zapata Malbec",
+                    Descricao = "Malbec argentino encorpado, com frutas negras e toques de baunilha.",
+                    Pais = "Argentina",
+                    Regiao = "Mendoza",
+                    Uvas = "Malbec",
+                    Ano = 2019,
+                    Tipo = TipoVinho.Tinto,
+                    Nota = 9.2,
+                    RecomendaDecantar = true
+                },
+                new Vinho
+                {
+                    Nome = "Cloudy Bay Sauvignon Blanc",
+                    Descricao = "Branco neozelandês vibrante, com notas de maracujá e ervas frescas.",
+                    Pais = "Nova Zelândia",
+                    Regiao = "Marlborough",
+                    Uvas = "Sauvignon Blanc",
+                    Ano = 2022,
+                    Tipo = TipoVinho.Branco,
+                    Nota = 8.9,
+                    RecomendaDecantar = false
+                },
+                new Vinho
+                {
+                    Nome = "Vega Sicilia Único",
+                    Descricao = "Grande tinto espanhol, complexo e elegante, com longo envelhecimento.",
+                    Pais = "Espanha",
+                    Regiao = "Ribera del Duero",
+                    Uvas = "Tempranillo, Cabernet Sauvignon",
+                    Ano = 2014,
+                    Tipo = TipoVinho.Tinto,
+                    Nota = 9.7,
+                    RecomendaDecantar = true
+                },
+                new Vinho
+                {
+                    Nome = "Miolo Millésime",
+                    Descricao = "Espumante brasileiro brut, com perlage fina e aromas cítricos.",
+                    Pais = "Brasil",
+                    Regiao = "Vale dos Vinhedos",
+                    Uvas = "Chardonnay, Pinot Noir",
+                    Ano = 2021,
+                    Tipo = TipoVinho.Espumante,
+                    Nota = 8.5,
+                    RecomendaDecantar = false
+                },
+                new Vinho
+                {
+                    Nome = "Château d'Yquem",
+                    Descricao = "Sauternes francês lendário, doce e complexo, com notas de mel e damasco.",
+                    Pais = "França",
+                    Regiao = "Sauternes, Bordeaux",
+                    Uvas = "Sémillon, Sauvignon Blanc",
+                    Ano = 2016,
+                    Tipo = TipoVinho.Rose,
+                    Nota = 9.9,
+                    RecomendaDecantar = false
+                },
+                new Vinho
+                {
+                    Nome = "Errázuriz Don Maximiano",
+                    Descricao = "Tinto chileno icono, com cassis, especiarias e taninos refinados.",
+                    Pais = "Chile",
+                    Regiao = "Aconcagua Valley",
+                    Uvas = "Cabernet Sauvignon, Syrah, Carménère",
+                    Ano = 2018,
+                    Tipo = TipoVinho.Tinto,
+                    Nota = 9.1,
+                    RecomendaDecantar = true
+                },
+                new Vinho
+                {
+                    Nome = "Casal Garcia Vinho Verde",
+                    Descricao = "Branco português leve, fresco e levemente efervescente, ideal para verão.",
+                    Pais = "Portugal",
+                    Regiao = "Vinho Verde",
+                    Uvas = "Loureiro, Arinto",
+                    Ano = 2023,
+                    Tipo = TipoVinho.Branco,
+                    Nota = 7.8,
+                    RecomendaDecantar = false
+                },
+                new Vinho
+                {
+                    Nome = "Pizzato Alma Unica Merlot",
+                    Descricao = "Merlot brasileiro com frutas vermelhas maduras e toques de chocolate.",
+                    Pais = "Brasil",
+                    Regiao = "Vale dos Vinhedos",
+                    Uvas = "Merlot",
+                    Ano = 2020,
+                    Tipo = TipoVinho.Tinto,
+                    Nota = 8.3,
+                    RecomendaDecantar = true
                 }
             });
 

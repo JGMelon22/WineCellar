@@ -52,7 +52,7 @@ public partial class VinhoListViewModel(IVinhoRepositorio repositorio) : Observa
     }
 
     [RelayCommand]
-    private async Task AbrirOrdenacao()
+    private async Task AbrirOrdenacaoAsync()
     {
         var opcoes = new Dictionary<string, (CampoOrdenacao Campo, bool Crescente)>
         {
@@ -72,6 +72,8 @@ public partial class VinhoListViewModel(IVinhoRepositorio repositorio) : Observa
 
         CampoOrdenacaoSelecionado = selecionado.Campo;
         OrdemCrescente = selecionado.Crescente;
+
+        await BuscarAsync();
     }
 
     [RelayCommand]
