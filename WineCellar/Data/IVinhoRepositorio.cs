@@ -9,6 +9,14 @@ public interface IVinhoRepositorio
     Task Adicionar(Vinho vinho);
     Task Atualizar(Vinho vinho);
     Task Excluir(Vinho vinho);
-    Task<List<Vinho>> Buscar(string? nome, TipoVinho? tipoVinho, string? pais);
+
+    Task<List<Vinho>> Buscar(
+        string? nome,
+        TipoVinho? tipoVinho,
+        string? pais,
+        CampoOrdenacao campoOrdenacao,
+        bool ordemCrescente
+    );
+
     Task<List<string>> ObterPaisesDistintos();
 }

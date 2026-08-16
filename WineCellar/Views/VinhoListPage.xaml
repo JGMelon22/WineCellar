@@ -10,6 +10,7 @@
              Title="Meus Vinhos">
 
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="⇅" Command="{Binding AbrirOrdenacaoCommand}" />
         <ToolbarItem Text="+" Command="{Binding NovoVinhoCommand}" />
     </ContentPage.ToolbarItems>
 

@@ -30,6 +30,10 @@ public partial class VinhoListViewModel(IVinhoRepositorio repositorio) : Observa
 
     [ObservableProperty] private string _paisSelecionado = OpcaoTodos;
 
+    [ObservableProperty] private CampoOrdenacao _campoOrdenacaoSelecionado = CampoOrdenacao.Nome;
+
+    [ObservableProperty] private bool _ordemCrescente = true;
+
     [RelayCommand]
     private async Task CarregarVinhosAsync()
     {
@@ -48,6 +52,29 @@ public partial class VinhoListViewModel(IVinhoRepositorio repositorio) : Observa
     }
 
     [RelayCommand]
+    private async Task AbrirOrdenacao()
+    {
+        var opcoes = new Dictionary<string, (CampoOrdenacao Campo, bool Crescente)>
+        {
+            ["Nome (A-Z)"] = (CampoOrdenacao.Nome, true),
+            ["Nome (Z-A)"] = (CampoOrdenacao.Nome, false),
+            ["Ano (mais antigo primeiro)"] = (CampoOrdenacao.Ano, true),
+            ["Ano (mais recente primeiro)"] = (CampoOrdenacao.Ano, false),
+            ["Nota (menor primeiro)"] = (CampoOrdenacao.Nota, true),
+            ["Nota (maior primeiro)"] = (CampoOrdenacao.Nota, false),
+        };
+
+        var escolha = await Shell.Current.DisplayActionSheetAsync(
+            "Ordernar pro", "Cancelar", null, opcoes.Keys.ToArray());
+
+        if (escolha is null || escolha == "Cancelar" || !opcoes.TryGetValue(escolha, out var selecionado))
+            return;
+
+        CampoOrdenacaoSelecionado = selecionado.Campo;
+        OrdemCrescente = selecionado.Crescente;
+    }
+
+    [RelayCommand]
     private async Task BuscarAsync()
     {
         EstaCarregando = true;
@@ -60,7 +87,8 @@ public partial class VinhoListViewModel(IVinhoRepositorio repositorio) : Observa
             ? null
             : PaisSelecionado;
 
-        var lista = await repositorio.Buscar(FiltroNome, tipoVinho, pais);
+        var lista = await repositorio.Buscar(
+            FiltroNome, tipoVinho, pais, CampoOrdenacaoSelecionado, OrdemCrescente);
         Vinhos = new ObservableCollection<Vinho>(lista);
 
         EstaCarregando = false;

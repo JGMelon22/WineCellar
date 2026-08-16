@@ -45,7 +45,13 @@ public class VinhoRepositorio : IVinhoRepositorio
         await _conexao.DeleteAsync(vinho);
     }
 
-    public async Task<List<Vinho>> Buscar(string? nome, TipoVinho? tipoVinho, string? pais)
+    public async Task<List<Vinho>> Buscar(
+        string? nome,
+        TipoVinho? tipoVinho,
+        string? pais,
+        CampoOrdenacao campoOrdenacao,
+        bool ordemCrescente
+    )
     {
         await InicializarAsync();
 
@@ -59,6 +65,17 @@ public class VinhoRepositorio : IVinhoRepositorio
 
         if (!string.IsNullOrWhiteSpace(pais))
             query = query.Where(v => v.Pais == pais);
+
+        query = (campoOrdenacao, ordemCrescente) switch
+        {
+            (CampoOrdenacao.Nome, true) => query.OrderBy(v => v.Nome),
+            (CampoOrdenacao.Nome, false) => query.OrderByDescending(v => v.Nome),
+            (CampoOrdenacao.Ano, true) => query.OrderBy(v => v.Ano),
+            (CampoOrdenacao.Ano, false) => query.OrderByDescending(v => v.Ano),
+            (CampoOrdenacao.Nota, true) => query.OrderBy(v => v.Nota),
+            (CampoOrdenacao.Nota, false) => query.OrderByDescending(v => v.Nota),
+            _ => query
+        };
 
         return await query.ToListAsync();
     }
