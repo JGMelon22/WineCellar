@@ -6,7 +6,7 @@ App Android desenvolvido em .NET MAUI, com foco em aprendizado didático de arqu
 
 <p align="center">
   <img src="assets/splash.jpeg" width="220" alt="Splash Screen" />
-  <img src="assets/filters.jpeg" width="220" alt="Wine List With Filters" />
+  <img src="assets/filtersAndSorting.jpeg" width="220" alt="Wine List With Filters" />
 </p>
 
 <p align="center">
@@ -21,7 +21,7 @@ App Android desenvolvido em .NET MAUI, com foco em aprendizado didático de arqu
 - [x] **Fase 3** — Seleção e armazenamento da foto da garrafa
 - [x] **Fase 4** — Compartilhamento dos dados do vinho (API `Share` do .NET MAUI)
 - [x] **Fase 5** — Migração para MVVM com CommunityToolkit.Mvvm
-- [ ] **Fase 6** — Busca, filtros e ordenação
+- [x] **Fase 6** — Busca, filtros e ordenação
 - [ ] **Fase 7** — Melhorias de UI/UX: temas claro/escuro, transições e animações
 
 ### Icon Credits

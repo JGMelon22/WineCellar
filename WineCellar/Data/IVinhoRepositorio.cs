@@ -14,6 +14,7 @@ public interface IVinhoRepositorio
         string? nome,
         TipoVinho? tipoVinho,
         string? pais,
+        string? uva,
         CampoOrdenacao campoOrdenacao,
         bool ordemCrescente
     );

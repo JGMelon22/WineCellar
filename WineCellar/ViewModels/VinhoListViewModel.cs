@@ -14,6 +14,8 @@ public partial class VinhoListViewModel(IVinhoRepositorio repositorio) : Observa
 
     private CancellationTokenSource? _debounceCts;
 
+    private bool _suprimirBusca;
+
     [ObservableProperty] private bool _estaCarregando;
 
     [ObservableProperty] private ObservableCollection<Vinho> _vinhos = new();
@@ -29,6 +31,8 @@ public partial class VinhoListViewModel(IVinhoRepositorio repositorio) : Observa
     [ObservableProperty] private ObservableCollection<string> _paisesDisponiveis = new();
 
     [ObservableProperty] private string _paisSelecionado = OpcaoTodos;
+
+    [ObservableProperty] private string _filtroUva = string.Empty;
 
     [ObservableProperty] private CampoOrdenacao _campoOrdenacaoSelecionado = CampoOrdenacao.Nome;
 
@@ -90,21 +94,39 @@ public partial class VinhoListViewModel(IVinhoRepositorio repositorio) : Observa
             : PaisSelecionado;
 
         var lista = await repositorio.Buscar(
-            FiltroNome, tipoVinho, pais, CampoOrdenacaoSelecionado, OrdemCrescente);
+            FiltroNome, tipoVinho, pais, FiltroUva, CampoOrdenacaoSelecionado, OrdemCrescente);
         Vinhos = new ObservableCollection<Vinho>(lista);
 
         EstaCarregando = false;
     }
 
     // // Disparado automaticamente pelo CommunityToolkit.Mvvm sempre que FiltroNome muda
-    partial void OnFiltroNomeChanged(string value) => AgendarBuscaComDebounce();
+    partial void OnFiltroNomeChanged(string value)
+    {
+        if (_suprimirBusca) return;
+        AgendarBuscaComDebounce();
+    }
 
     // Picker não precisa de debounce: cada seleção já é uma escolha
     // deliberada do usuário, não uma tecla no meio de uma palavra.
 
-    partial void OnTipoSelecionadoChanged(string value) => BuscarCommand.Execute(null);
+    partial void OnTipoSelecionadoChanged(string value)
+    {
+        if (_suprimirBusca) return;
+        BuscarCommand.Execute(null);
+    }
 
-    partial void OnPaisSelecionadoChanged(string value) => BuscarCommand.Execute(null);
+    partial void OnPaisSelecionadoChanged(string value)
+    {
+        if (_suprimirBusca) return;
+        BuscarCommand.Execute(null);
+    }
+
+    partial void OnFiltroUvaChanged(string value)
+    {
+        if (_suprimirBusca) return;
+        AgendarBuscaComDebounce();
+    }
 
     private void AgendarBuscaComDebounce()
     {
@@ -142,5 +164,21 @@ public partial class VinhoListViewModel(IVinhoRepositorio repositorio) : Observa
     private async Task NovoVinhoAsync()
     {
         await Shell.Current.GoToAsync(nameof(VinhoFormPage));
+    }
+
+    [RelayCommand]
+    private async Task LimparFiltrosAsync()
+    {
+        _debounceCts?.Cancel();
+        _suprimirBusca = true;
+
+        FiltroNome = string.Empty;
+        TipoSelecionado = OpcaoTodos;
+        PaisSelecionado = OpcaoTodos;
+        FiltroUva = string.Empty;
+
+        _suprimirBusca = false;
+
+        await BuscarAsync();
     }
 }

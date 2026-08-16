@@ -49,6 +49,7 @@ public class VinhoRepositorio : IVinhoRepositorio
         string? nome,
         TipoVinho? tipoVinho,
         string? pais,
+        string? uva,
         CampoOrdenacao campoOrdenacao,
         bool ordemCrescente
     )
@@ -65,6 +66,9 @@ public class VinhoRepositorio : IVinhoRepositorio
 
         if (!string.IsNullOrWhiteSpace(pais))
             query = query.Where(v => v.Pais == pais);
+        
+        if (!string.IsNullOrWhiteSpace(uva))
+            query = query.Where(v => v.Nome.Contains(uva));
 
         query = (campoOrdenacao, ordemCrescente) switch
         {
