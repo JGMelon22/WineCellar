@@ -48,7 +48,7 @@ public partial class VinhoFormViewModel(IVinhoRepositorio repositorio, IFotoServ
 
     [ObservableProperty] private int _vinhoId;
 
-    public bool SemFoto => TemFoto;
+    public bool SemFoto => !TemFoto;
 
     public IEnumerable<TipoVinho> TiposDisponiveis => Enum.GetValues<TipoVinho>();
 
