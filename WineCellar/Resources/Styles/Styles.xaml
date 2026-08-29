@@ -200,6 +200,28 @@
         <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
 
+    <!-- Binding de tema escuro x claro -->
+    <Style TargetType="Label" x:Key="LabelSecundario">
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}" />
+        <Setter Property="FontSize" Value="13" />
+    </Style>
+
+    <Style TargetType="BoxView" x:Key="Divisor">
+        <Setter Property="HeightRequest" Value="1" />
+        <Setter Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+    </Style>
+
+    <Style TargetType="Border" x:Key="BorderPlaceholderFoto">
+        <Setter Property="Background"
+                Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+        <Setter Property="Stroke"
+                Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+    </Style>
+    <!-- -->
+
     <Style TargetType="Label" x:Key="SubHeadline">
         <Setter Property="TextColor"
                 Value="{AppThemeBinding Light={StaticResource MidnightBlue}, Dark={StaticResource White}}" />

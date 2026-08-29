@@ -16,7 +16,7 @@
             <Label Text="Foto" FontAttributes="Bold" />
             <Border HeightRequest="180"
                     Padding="0"
-                    Stroke="LightGray">
+                   Style="{StaticResource BorderPlaceholderFoto}">
 
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="8" />
