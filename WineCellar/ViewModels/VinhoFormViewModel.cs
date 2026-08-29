@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WineCellar.Data;
@@ -124,6 +125,8 @@ public partial class VinhoFormViewModel(IVinhoRepositorio repositorio, IFotoServ
 
         var nota = double.Parse(NotaTexto.Replace(',', '.'), CultureInfo.InvariantCulture);
 
+        var criando = _vinhoEmEdicao is null;
+
         var vinho = _vinhoEmEdicao ?? new Vinho();
         vinho.Nome = Nome;
         vinho.Descricao = Descricao;
@@ -143,6 +146,8 @@ public partial class VinhoFormViewModel(IVinhoRepositorio repositorio, IFotoServ
 
         if (_caminhoFotoOriginal is not null && _caminhoFotoOriginal != _caminhoFotoAtual)
             fotoService.ExcluirFoto(_caminhoFotoOriginal);
+
+        await Toast.Make(criando ? "Vinho adicionado!" : "Vinho atualizado!").Show();
 
         await Shell.Current.GoToAsync("..");
     }

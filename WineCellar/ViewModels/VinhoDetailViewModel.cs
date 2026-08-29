@@ -1,4 +1,5 @@
 using System.Globalization;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WineCellar.Data;
@@ -94,6 +95,9 @@ public partial class VinhoDetailViewModel(IVinhoRepositorio repositorio, IFotoSe
 
         await repositorio.Excluir(_vinho);
         fotoService.ExcluirFoto(_vinho.CaminhoFoto);
+
+        await Toast.Make($"\"{_vinho.Nome}\" excluído").Show();
+        
         await Shell.Current.GoToAsync("..");
     }
 
