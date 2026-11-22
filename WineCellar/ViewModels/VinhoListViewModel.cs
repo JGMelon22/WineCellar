@@ -169,7 +169,7 @@ public partial class VinhoListViewModel(IVinhoRepositorio repositorio) : Observa
     [RelayCommand]
     private async Task LimparFiltrosAsync()
     {
-        _debounceCts?.Cancel();
+        _debounceCts?.CancelAsync();
         _suprimirBusca = true;
 
         FiltroNome = string.Empty;
